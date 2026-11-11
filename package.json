@@ -1,0 +1,28 @@
+{
+  "name": "inventory-data-management-api",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node seed.js",
+    "test": "node --test tests/",
+    "verify": "node scripts/verify.js",
+    "test:watch": "node --test --watch tests/"
+  },
+  "keywords": [
+    "express",
+    "mongoose",
+    "mongodb",
+    "inventory",
+    "rest-api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "description": "Assignment 3 — Inventory & Data Management System (Node.js, Express, MongoDB, Mongoose)",
+  "dependencies": {
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "mongoose": "^9.12.1"
+  }
+}

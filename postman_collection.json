@@ -1,0 +1,169 @@
+{
+  "info": {
+    "name": "Assignment 3 — Inventory & Data Management System",
+    "description": "RESTful inventory backend: Node.js + Express.js + MongoDB + Mongoose + dotenv.\n\nSet the collection variable baseUrl to your server, then run the requests in order.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "productId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "00 · Health check",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/health", "host": ["{{baseUrl}}"], "path": ["api", "health"] }
+      }
+    },
+    {
+      "name": "01 · Create Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const body = pm.response.json();",
+              "if (body._id) pm.collectionVariables.set('productId', body._id);",
+              "pm.test('201 Created', () => pm.response.to.have.status(201));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Gel Pen Pack of 15\",\n  \"sku\": \"STNY-PN-713\",\n  \"category\": \"Stationery\",\n  \"price\": 120,\n  \"quantity\": 40,\n  \"reorderLevel\": 20,\n  \"supplier\": \"Cello Pens\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/products", "host": ["{{baseUrl}}"], "path": ["api", "products"] }
+      }
+    },
+    {
+      "name": "02 · Get All Products (page 1, limit 10)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/products?page=1&limit=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "10" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "03 · Get All Products (filter + sort)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/products?category=Electronics&minPrice=500&maxPrice=5000&search=mouse&sort=-price&page=1&limit=5",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products"],
+          "query": [
+            { "key": "category", "value": "Electronics" },
+            { "key": "minPrice", "value": "500" },
+            { "key": "maxPrice", "value": "5000" },
+            { "key": "search", "value": "mouse" },
+            { "key": "sort", "value": "-price" },
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "5" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "04 · Get Single Product by ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{productId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", "{{productId}}"]
+        }
+      }
+    },
+    {
+      "name": "05 · Update Product",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Gel Pen Pack of 15\",\n  \"sku\": \"STNY-PN-713\",\n  \"category\": \"Stationery\",\n  \"price\": 140,\n  \"quantity\": 60\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{productId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", "{{productId}}"]
+        }
+      }
+    },
+    {
+      "name": "06 · Adjust Stock (restock +10)",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"change\": 10\n}" },
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{productId}}/stock",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", "{{productId}}", "stock"]
+        }
+      }
+    },
+    {
+      "name": "07 · Adjust Stock (sale -5)",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"change\": -5\n}" },
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{productId}}/stock",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", "{{productId}}", "stock"]
+        }
+      }
+    },
+    {
+      "name": "08 · Low-Stock Report",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/products/low-stock", "host": ["{{baseUrl}}"], "path": ["api", "products", "low-stock"] }
+      }
+    },
+    {
+      "name": "09 · Category-wise Summary",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/products/summary", "host": ["{{baseUrl}}"], "path": ["api", "products", "summary"] }
+      }
+    },
+    {
+      "name": "10 · Delete Product",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{baseUrl}}/api/products/{{productId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products", "{{productId}}"]
+        }
+      }
+    },
+    {
+      "name": "11 · Validation error (400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"AB\",\n  \"sku\": \"bad-sku\",\n  \"category\": \"Spaceships\",\n  \"price\": -5,\n  \"quantity\": 1.5\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/products", "host": ["{{baseUrl}}"], "path": ["api", "products"] }
+      }
+    }
+  ]
+}
